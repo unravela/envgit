@@ -1,0 +1,102 @@
+project_name: gitwrk
+before:
+  hooks:
+    - go mod download
+    - go test ./...
+
+builds:
+- env:
+    - CGO_ENABLED=0
+
+  main: ./cmd/envgit/main.go
+  binary: envgit
+
+  goos:
+    - linux
+    - darwin
+    - windows
+
+  ignore:
+    - goos: darwin
+      goarch: 386
+    - goos: linux
+      goarch: 386
+
+archives:
+  - replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - '^chore:'
+    - '^refactor:'
+
+release:
+  github:
+    owner: unravela
+    name: envgit
+  name_template: "{{.ProjectName}}-v{{.Version}}"
+
+scoop:
+  bucket:
+    owner: unravela
+    name: scoop-bucket
+  homepage: https://github.com/unravela/gitwrk
+  description: runs another command with env. variables loaded from file placed in git repository
+  license: Apache 2.0
+
+brews:
+  - name: envgit
+    github:
+      owner: unravela
+      name: homebrew-tap
+    folder: Formula
+    homepage: https://github.com/unravela/gitwrk
+    description: runs another command with env. variables loaded from file placed in git repository
+
+nfpms:
+  -
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    replacements:
+      amd64: 64-bit
+      386: 32-bit
+
+    formats:
+      - deb
+      - rpm
+
+    scripts:
+      postinstall: "scripts/postinstall.sh"
+
+    epoch: 1
+    release: 1
+    vendor: unravela.io
+    homepage: https://github.com/unravela
+    maintainer: zdenko vrabel (zdenko.vrabel@unravela.io)
+    description: runs another command with env. variables loaded from file placed in git repository
+    license: Apache 2.0
+
+snapcrafts:
+  -
+    name: envgit
+    publish: true
+    summary: runs another command with env. variables loaded from file placed in git repository
+    description:  |
+      **EnvGit** is inspired by EnvDir and runs another command with env. variables loaded from file placed in git repository.
+
+    license: Apache-2.0
