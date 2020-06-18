@@ -1,4 +1,4 @@
-project_name: gitwrk
+project_name: envgit
 before:
   hooks:
     - go mod download
@@ -10,6 +10,8 @@ builds:
 
   main: ./cmd/envgit/main.go
   binary: envgit
+  ldflags:
+    - -X 'github.com/unravela/envgit.version={{.Version}}'
 
   goos:
     - linux
@@ -56,7 +58,7 @@ scoop:
   bucket:
     owner: unravela
     name: scoop-bucket
-  homepage: https://github.com/unravela/gitwrk
+  homepage: https://github.com/unravela/envgit
   description: runs another command with env. variables loaded from file placed in git repository
   license: Apache 2.0
 
@@ -66,7 +68,7 @@ brews:
       owner: unravela
       name: homebrew-tap
     folder: Formula
-    homepage: https://github.com/unravela/gitwrk
+    homepage: https://github.com/unravela/envgit
     description: runs another command with env. variables loaded from file placed in git repository
 
 nfpms:

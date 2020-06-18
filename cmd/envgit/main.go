@@ -14,6 +14,7 @@ func main() {
 		HideHelpCommand: true,
 		Flags:           envgit.Flags,
 		Action:          doMain,
+		Version:         envgit.GetVersion(),
 	}
 
 	app.Run(os.Args)
